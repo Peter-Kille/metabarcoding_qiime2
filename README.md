@@ -11,7 +11,7 @@ A SLURM pipeline designed for paried end illumina reads analysed with qiime2 (ht
 1. Install the metagenome_slurm resources into your HPC cluster directory in which you will be performing the assembly:  
 
 ```
-git clone https://github.com/Peter-Kille/metabarcoding_miSeq_100.git
+git clone https://github.com/Peter-Kille/metabarcoding_qiime2.git
 ```
 
 2. Put the raw reads, sample-metadata and manifest in `source_data` folder.
