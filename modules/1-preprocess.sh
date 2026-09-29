@@ -18,15 +18,15 @@ echo "\$SLURM_MEM_PER_CPU=${SLURM_MEM_PER_CPU}"
 # read in sample and read names and move and rename samples into workdir
 
 
-[ -f ${sourcedir}/working_manifest.tsv ] && rm ${sourcedir}/working_manifest.tsv
+#[ -f ${sourcedir}/working_manifest.tsv ] && rm ${sourcedir}/working_manifest.tsv
 
-touch ${sourcedir}/working_manifest.tsv
+#touch ${sourcedir}/working_manifest.tsv
 
-printf "sample-id\tabsolute-filepath\n" >> ${sourcedir}/working_manifest.tsv
+#printf "sample-id\tabsolute-filepath\n" >> ${sourcedir}/working_manifest.tsv
 
 tail -n +2 ${sourcedir}/"${manifest}" | while read -a file; do
 
-printf "${file[0]}\t${cutdir}/${file[0]}_merge_cut.fastq.gz\n" >> ${sourcedir}/working_manifest.tsv
+#printf "${file[0]}\t${cutdir}/${file[0]}_merge_cut.fastq.gz\n" >> ${sourcedir}/working_manifest.tsv
 
 forread=$(basename ${file[1]})
 revread=$(basename ${file[2]})

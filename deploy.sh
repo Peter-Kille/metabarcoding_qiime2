@@ -34,12 +34,18 @@ sbatch -d singleton --error="${log}/2B-fastp_%J.err" --output="${log}/2B-fastp_%
 
 sbatch -d singleton --error="${log}/2C-trimqc_%J.err" --output="${log}/2C-trimqc_%J.out" --array="0-${sample_number}%20" --job-name=${NAME} --partition=${PART} "${moduledir}/2C-fastqc-trim.sh"
 
-sbatch -d singleton --error="${log}/2D-rc_%J.err" --output="${log}/2D-rc_%J.out" --job-name=${NAME} --partition=${PART} "${moduledir}/2D-rc-primer.sh"
+#sbatch -d singleton --error="${log}/2D-rc_%J.err" --output="${log}/2D-rc_%J.out" --job-name=${NAME} --partition=${PART} "${moduledir}/2D-rc-primer.sh"
 
-sbatch -d singleton --error="${log}/2E-cut_%J.err" --output="${log}/2E-cut_%J.out" --array="0-${sample_number}%20" --job-name=${NAME} --partition=${PART} "${moduledir}/2E-cutadapt.sh"
+#sbatch -d singleton --error="${log}/2E-cut_%J.err" --output="${log}/2E-cut_%J.out" --array="0-${sample_number}%20" --job-name=${NAME} --partition=${PART} "${moduledir}/2E-cutadapt.sh"
 
 # Step 3: Qiime2 - import, QC
 # Input into qiime and run QC.
+
+if [ ${type}="paired" ]; then
+sbatch -d singleton --error="${log}/3A_q2input_%J.err" --output="${log}/3A_q2input_%J.out" --job-name=${NAME} --partition=${PART} "${moduledir}/3A-qiime2-paired-import.sh.sh"
+else
+sbatch -d singleton --error="${log}/3A_q2input_%J.err" --output="${log}/3A_q2input_%J.out" --job-name=${NAME} --partition=${PART} "${moduledir}/3A-qiime2-single-import.sh"
+fi
 
 sbatch -d singleton --error="${log}/3A_q2input_%J.err" --output="${log}/3A_q2input_%J.out" --job-name=${NAME} --partition=${PART} "${moduledir}/3A-qiime2-import.sh"
 

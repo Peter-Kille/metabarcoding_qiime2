@@ -23,12 +23,12 @@ echo \$SLURM_MEM_PER_CPU=${SLURM_MEM_PER_CPU}
 # Write jobscript to output file (good for reproducibility)
 cat $0
 
-module load QIIME2/2026.4-rachis-conda
+module load QIIME2/2026.7-rachis-conda
 
 workdir=$(pwd)
 
 classifierseqs="silva-138-99-seqs-515-806.qza"
-classifiertax="silva-138-99-tax-515-806.qza"
+classifiertax="silva-138-99-tax.qza"
 
 classifier="16S"
 
@@ -40,7 +40,9 @@ qiime feature-classifier extract-reads \
   --p-min-length 100 \
   --p-max-length 500 \
   --p-n-jobs ${SLURM_CPUS_PER_TASK} \
-  --o-reads ${workdir}/${classifier}-ref-seqs.qza
+  --o-reads ${workdir}/${classifier}-ref-seqs.qza \
+  --o-read-extraction-stats ${workdir}/${classifier}_stats.txt
+
 
 qiime feature-classifier fit-classifier-naive-bayes \
   --i-reference-reads ${workdir}/${classifier}-ref-seqs.qza \

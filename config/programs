@@ -24,7 +24,7 @@ export cutadapt_module
 
 
 #STEPS 4-6: QIIME 
-q2_module="QIIME2/2026.4-rachis-conda"
+q2_module="QIIME2/2026.7-rachis-conda"
 module is-avail ${q2_module} || { echo "${q2_module} not avalible check config.parameters_all file" ; exit 1; }
 export q2_module
 

@@ -8,6 +8,7 @@ workdir=$(pwd)/work
 manifest=""
 smetadata=""
 classifier=""
+type="paired"
 fp="GTGCCAGCMGCCGCGGTAA"
 rp="GGACTACHVGGGTWTCTAAT"
 
@@ -26,7 +27,7 @@ validate_partition() {
 print_help() {
  echo "/deploy.sh -h"
  echo ""
- echo "Usage: ./deploy.sh -n [NAME] -p [PARTITION] -m [MANIFEST] -s [SAMPLE_METADATA] -c [CLASSIFIER]"
+ echo "Usage: ./deploy.sh -n [NAME] -p [PARTITION] -m [MANIFEST] -s [SAMPLE_METADATA] -c [CLASSIFIER] -t [TYPE - paired or single]"
  echo ""
  echo "Copy your paired end sequence files as .fastq.gz files in the source_data directory."
  echo " Also copy a sample-metadata file and manifest into the source_data directory."
@@ -45,7 +46,8 @@ print_help() {
  echo " -p, --partition     REQUIRED: Avalible partition / hpc queue (epyc, defq, jumbo, epyc_ssd)"
  echo " -m, --manifest      REQUIRED: manifest file, sample id[tab]forward-absolute-filepath[tab]everse-absolute-filepath"
  echo " -s, --smetadata     REQUIRED: sample-metadata"
- echo " -c, --classifier    REQUIRED: reference condition"
+ echo " -c, --classifier    REQUIRED: trained classifier"
+ echo " -t, --type          Optional: Data Type - single or paired end (default paired)
  echo " -f, --forwardprimer Optional: Provides forward primer 5' - 3' can include IUPAC codes but ensure Inosine base is represented by N - default is 16S-515F"
  echo " -r, --reverseprimer Optional: Provides forward primer 5' - 3' can include IUPAC codes but ensure Inosine base is represented by N - default is 16S-806R"
  echo " -w, --work          Optional: working dir - default is current dir /work/"
@@ -74,6 +76,7 @@ while true; do
     -c|--classifier) classifier="$2"; shift 2 ;;
     -f|--forwardprimer) forwardprimer="$2"; shift 2 ;;
     -r|--reverseprimer) reverseprimer="$2"; shift 2 ;;
+    -t|--type) type="$2"; shift 2 ;;
     -h|--help) print_help ;;
     --) shift; break ;;
     *) echo "Unexpected option: $1" >&2; exit 1 ;;
@@ -131,6 +134,7 @@ echo "Sample Metadata file: ${smetadata}"
 echo "Classifier: ${classifier}"
 echo "forwardprimer: ${fp}"
 echo "reverseprimer: ${rp}"
+echo "type" ${type}
 
 #export arguements
 export NAME
@@ -141,3 +145,4 @@ export smetadata
 export classifier
 export fp
 export rp
+export type
