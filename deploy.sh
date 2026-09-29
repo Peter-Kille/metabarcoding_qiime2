@@ -42,12 +42,10 @@ sbatch -d singleton --error="${log}/2C-trimqc_%J.err" --output="${log}/2C-trimqc
 # Input into qiime and run QC.
 
 if [ ${type}="paired" ]; then
-sbatch -d singleton --error="${log}/3A_q2input_%J.err" --output="${log}/3A_q2input_%J.out" --job-name=${NAME} --partition=${PART} "${moduledir}/3A-qiime2-paired-import.sh.sh"
+sbatch -d singleton --error="${log}/3A_q2input_%J.err" --output="${log}/3A_q2input_%J.out" --job-name=${NAME} --partition=${PART} "${moduledir}/3A-qiime2-paired-import.sh"
 else
 sbatch -d singleton --error="${log}/3A_q2input_%J.err" --output="${log}/3A_q2input_%J.out" --job-name=${NAME} --partition=${PART} "${moduledir}/3A-qiime2-single-import.sh"
 fi
-
-sbatch -d singleton --error="${log}/3A_q2input_%J.err" --output="${log}/3A_q2input_%J.out" --job-name=${NAME} --partition=${PART} "${moduledir}/3A-qiime2-import.sh"
 
 sbatch -d singleton --error="${log}/3B_q2dada2_%J.err" --output="${log}/3B_q2dada2_%J.out" --job-name=${NAME} --partition=${PART} "${moduledir}/3B-qiime2-dada2.sh"
 
