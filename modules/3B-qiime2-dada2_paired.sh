@@ -20,14 +20,19 @@ cat $0
 # Load some modules
 module load ${q2_module}
 
-qiime dada2 denoise-single \
-        --i-demultiplexed-seqs "${q2_input}/${NAME}_demux.qza" \
-        --p-trunc-len 0 \
-        --p-n-threads ${SLURM_CPUS_PER_TASK} \
-        --o-representative-sequences "${q2_dada2}/${NAME}_asv-seqs.qza" \
-        --o-table "${q2_dada2}/${NAME}_asv-table.qza" \
-        --o-denoising-stats "${q2_dada2}/${NAME}_stats.qza" \
-        --o-base-transition-stats "${q2_dada2}/${NAME}_base-transition-stats.qza"
+
+qiime dada2 denoise-paired \
+  --i-demultiplexed-seqs "${q2_input}/${NAME}_demux.qza" \
+  --p-trim-left-f 20 \
+  --p-trunc-len-f 250 \
+  --p-trim-left-r 20 \
+  --p-trunc-len-r 250 \
+  --p-n-threads ${SLURM_CPUS_PER_TASK} \
+  --p-min-overlap 8 \
+  --o-representative-sequences "${q2_dada2}/${NAME}_asv-seqs.qza" \
+  --o-table "${q2_dada2}/${NAME}_asv-table.qza" \
+  --o-denoising-stats "${q2_dada2}/${NAME}_stats.qza" \
+  --o-base-transition-stats "${q2_dada2}/${NAME}_trans-stats.qza"
 
 qiime metadata tabulate \
         --m-input-file "${q2_dada2}/${NAME}_stats.qza" \

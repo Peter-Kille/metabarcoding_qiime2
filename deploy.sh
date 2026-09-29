@@ -7,7 +7,11 @@ source config/programs
 
 # Step 1: Rename and count file
 
-sbatch -d singleton --error="${log}/1-preprocess_%J.err" --output="${log}/1-preprocess_%J.out" --job-name=${NAME} --partition=${PART} "${moduledir}/1-preprocess.sh"
+if [ ${type}="paired" ]; then
+sbatch -d singleton --error="${log}/1-preprocess_%J.err" --output="${log}/1-preprocess_%J.out" --job-name=${NAME} --partition=${PART} "${moduledir}/1-preprocess_paired.sh"
+else
+sbatch -d singleton --error="${log}/1-preprocess_%J.err" --output="${log}/1-preprocess_%J.out" --job-name=${NAME} --partition=${PART} "${moduledir}/1-preprocess_single.sh"
+fi
 
 samples=$( tail -n +2 ${sourcedir}/${manifest} | cut -f1,1 )
 
@@ -34,9 +38,9 @@ sbatch -d singleton --error="${log}/2B-fastp_%J.err" --output="${log}/2B-fastp_%
 
 sbatch -d singleton --error="${log}/2C-trimqc_%J.err" --output="${log}/2C-trimqc_%J.out" --array="0-${sample_number}%20" --job-name=${NAME} --partition=${PART} "${moduledir}/2C-fastqc-trim.sh"
 
-#sbatch -d singleton --error="${log}/2D-rc_%J.err" --output="${log}/2D-rc_%J.out" --job-name=${NAME} --partition=${PART} "${moduledir}/2D-rc-primer.sh"
+sbatch -d singleton --error="${log}/2D-rc_%J.err" --output="${log}/2D-rc_%J.out" --job-name=${NAME} --partition=${PART} "${moduledir}/2D-rc-primer.sh"
 
-#sbatch -d singleton --error="${log}/2E-cut_%J.err" --output="${log}/2E-cut_%J.out" --array="0-${sample_number}%20" --job-name=${NAME} --partition=${PART} "${moduledir}/2E-cutadapt.sh"
+sbatch -d singleton --error="${log}/2E-cut_%J.err" --output="${log}/2E-cut_%J.out" --array="0-${sample_number}%20" --job-name=${NAME} --partition=${PART} "${moduledir}/2E-cutadapt.sh"
 
 # Step 3: Qiime2 - import, QC
 # Input into qiime and run QC.
@@ -47,9 +51,13 @@ else
 sbatch -d singleton --error="${log}/3A_q2input_%J.err" --output="${log}/3A_q2input_%J.out" --job-name=${NAME} --partition=${PART} "${moduledir}/3A-qiime2-single-import.sh"
 fi
 
-sbatch -d singleton --error="${log}/3B_q2dada2_%J.err" --output="${log}/3B_q2dada2_%J.out" --job-name=${NAME} --partition=${PART} "${moduledir}/3B-qiime2-dada2.sh"
+if [ ${type}="paired" ]; then
+sbatch -d singleton --error="${log}/3B_q2dada2_%J.err" --output="${log}/3B_q2dada2_%J.out" --job-name=${NAME} --partition=${PART} "${moduledir}/3B-qiime2-dada2_paired.sh"
+else
+sbatch -d singleton --error="${log}/3B_q2dada2_%J.err" --output="${log}/3B_q2dada2_%J.out" --job-name=${NAME} --partition=${PART} "${moduledir}/3B-qiime2-dada2_single.sh"
+fi
 
-sbatch -d singleton --error="${log}/3C_q2sum_%J.err" --output="${log}/3C_q2sum_%J.out" --job-name=${NAME} --partition=${PART} "${moduledir}/3C-qiime2-summary.sh"
+#sbatch -d singleton --error="${log}/3C_q2sum_%J.err" --output="${log}/3C_q2sum_%J.out" --job-name=${NAME} --partition=${PART} "${moduledir}/3C-qiime2-summary.sh"
 
 # Step 4: Qiime2 - Taxanomic Classification
 
